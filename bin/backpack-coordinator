@@ -1,0 +1,4 @@
+#!/usr/bin/env node
+(function() {
+    require("../lib/cli.js").start();
+})();

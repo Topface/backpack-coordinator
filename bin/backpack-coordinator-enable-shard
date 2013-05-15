@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+(function() {
+    var cli   = require("../lib/cli"),
+        bytes = require("bytes"),
+        args  = process.argv.slice(2),
+        coordinator;
+
+    if (args.length < 3) {
+        console.error("Usage: backpack-coordinator-add <zk_servers> </zk/root> <id>");
+        process.exit(1);
+    }
+
+    coordinator = cli.makeCoordinator(args[0], args[1]);
+    coordinator.on("error", console.error.bind(console));
+    coordinator.on("ready", function() {
+        coordinator.enableShard(args[2], function(error) {
+            if (error) {
+                throw error;
+            }
+
+            console.log("Enabled shard " + args[2] + " for writing");
+            coordinator.close(); // close works fine here
+        });
+    });
+})();

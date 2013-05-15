@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+(function() {
+    var cli  = require("../lib/cli"),
+        url  = require("url"),
+        args = process.argv.slice(2),
+        coordinator, server;
+
+    if (args.length < 4) {
+        console.error("Usage: backpack-coordinator-add <zk_servers> </zk/root> <id> <url>");
+        process.exit(1);
+    }
+
+    coordinator = cli.makeCoordinator(args[0], args[1]);
+    coordinator.on("error", console.error.bind(console));
+    coordinator.on("ready", function() {
+        server = url.parse(args[3]);
+
+        coordinator.addServer(args[2], server.hostname, server.port, function(error) {
+            if (error) {
+                throw error;
+            }
+
+            console.log("Added " + args[3] + " as " + args[2]);
+            coordinator.close(); // close works fine here
+        });
+    });
+})();

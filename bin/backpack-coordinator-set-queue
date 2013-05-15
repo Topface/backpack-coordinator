@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+(function() {
+    var cli   = require("../lib/cli"),
+        bytes = require("bytes"),
+        args  = process.argv.slice(2),
+        coordinator, servers;
+
+    if (args.length < 4) {
+        console.error("Usage: backpack-coordinator-add <zk_servers> </zk/root> <key> <host1:port1,host2:port2,..>");
+        process.exit(1);
+    }
+
+    coordinator = cli.makeCoordinator(args[0], args[1]);
+    coordinator.on("error", console.error.bind(console));
+    coordinator.on("ready", function() {
+        servers = args[3].split(",").map(function(server) {
+            var parts = server.split(":");
+            return {host: parts[0], port: parts[1]};
+        });
+
+        coordinator.setQueueInfo(servers, args[2], function(error) {
+            if (error) {
+                throw error;
+            }
+
+            console.log("Queue info updated!");
+            coordinator.close();
+        });
+    });
+})();

@@ -1,0 +1,79 @@
+#!/usr/bin/env node
+(function() {
+    var Zk       = require("zkjs"),
+        async    = require("async"),
+        args     = process.argv.slice(2),
+        requests = {},
+        servers  = [],
+        zk;
+
+    if (args.length < 4) {
+        console.error("Usage: backpack-coordinator-init <zk_servers> </zk/root> <queue_key> <redis_host1:redis_port2,...>");
+        process.exit(1);
+    }
+
+    zk = new Zk({
+        hosts : args[0].split(","),
+        root  : args[1]
+    });
+
+    zk.start(function(error) {
+        if (error) {
+            throw error;
+        }
+
+        args[3].split(",").forEach(function(redis) {
+            var parts = redis.split(":");
+            servers.push({
+                host: parts[0],
+                port: parts[1]
+            });
+        });
+
+        requests.servers_map = init.bind(this, "/servers-map", JSON.stringify({}));
+        requests.shards_map  = init.bind(this, "/shards-map", JSON.stringify({}));
+        requests.queue       = init.bind(this, "/queue", JSON.stringify({key: args[2], servers: servers}));
+
+        function init(key, value, callback) {
+            zk.create(key, value, createCallback.bind(this, callback));
+        }
+
+        function createCallback(callback, error) {
+            if (error) {
+                if (error == zk.errors.NODEEXISTS) {
+                    callback(undefined, false);
+                } else {
+                    callback(error);
+                }
+            } else {
+                callback(undefined, true);
+            }
+        }
+
+        async.parallel(requests, function(error, state) {
+            if (error) {
+                throw error;
+            }
+
+            if (state.servers_map) {
+                console.log("Servers map initialized");
+            } else {
+                console.log("Servers map already initialized");
+            }
+
+            if (state.shards_map) {
+                console.log("Shards map initialized");
+            } else {
+                console.log("Shards map already initialized");
+            }
+
+            if (state.queue) {
+                console.log("Queue initialized");
+            } else {
+                console.log("Queue already initialized");
+            }
+
+            zk.close();
+        });
+    });
+})();
