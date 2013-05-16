@@ -1,0 +1,38 @@
+{
+  "name": "backpack-coordinator",
+  "version": "0.2.0",
+  "description": "Coordination service for backpack cluster.",
+  "main": "index.js",
+  "dependencies": {
+    "async": "~0.2.8",
+    "backpack-replicator": "~0.2.0",
+    "bytes": "~0.2.1",
+    "mess": "~0.1.1",
+    "nop": "~0.0.0",
+    "redis": "~0.8.3",
+    "temp": "~0.5.0",
+    "zk-redis-queue": "~0.1.8",
+    "zkjs": "~3.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Topface/backpack-coordinator.git"
+  },
+  "keywords": [
+    "backpack",
+    "coordinator",
+    "webdav",
+    "dav",
+    "replication",
+    "cluster",
+    "ha"
+  ],
+  "author": "Ian Babrou <ibobrik@gmail.com> (http://bobrik.name/)",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "gitHead": "523654ba936d657617d1ddf9463a409fa198b4fd"
+}
