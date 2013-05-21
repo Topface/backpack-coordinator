@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+(function() {
+    var cli   = require("../lib/cli"),
+        bytes = require("bytes"),
+        args  = process.argv.slice(2),
+        coordinator;
+
+    if (args.length < 2) {
+        console.error("Usage: backpack-coordinator-add <zk_servers> </zk/root>");
+        process.exit(1);
+    }
+
+    coordinator = cli.makeCoordinator(args[0], args[1]);
+    coordinator.on("error", console.error.bind(console));
+    coordinator.on("ready", function() {
+        coordinator.getStats(function(error, stats) {
+            var used, total, percent;
+
+            if (error) {
+                throw error;
+            }
+
+            console.log("Shards:");
+            Object.keys(coordinator.sizes).forEach(function(id) {
+                var current  = coordinator.sizes[id].current,
+                    capacity = coordinator.sizes[id].capacity,
+                    percent  = Math.round(current / capacity * 100);
+
+                console.log(id + ":", bytes(current), "/", bytes(capacity), "(" + percent + "%)");
+            });
+
+            used    = bytes(stats.used_size);
+            total   = bytes(stats.total_size);
+            percent = Math.round(stats.usage_ratio * 100);
+
+            console.log("Overall:", used, "/", total, "(" + percent + "%)");
+
+            coordinator.close();
+        });
+    });
+})();
