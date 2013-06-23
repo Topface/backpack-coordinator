@@ -198,9 +198,6 @@ one physical server to eliminate single point of failure.
 ### Todo
 
 * [docs] Make docs better.
-* [bug] Under heavy load there may be 3 lost items for 30 million processed items.
-* [bug] Under heavy load size counter may be lower than actual space usage (can not confirm with 10m items).
-* [bug] Sometimes zookeeper may fire 102 (NOAUTH) errors and instance will not update from/to zabbix.
 * [feature] Having files counter (successful uploads and not) would be nice.
 
 ### Authors
