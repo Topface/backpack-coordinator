@@ -1,0 +1,34 @@
+#!/usr/bin/env node
+(function() {
+    var cli   = require("../lib/cli"),
+        bytes = require("bytes"),
+        args  = process.argv.slice(2),
+        coordinator;
+
+    if (args.length < 2) {
+        console.error("Usage: backpack-coordinator-dump-shards <zk_servers> </zk/root>");
+        process.exit(1);
+    }
+
+    coordinator = cli.makeCoordinator(args[0], args[1]);
+    coordinator.on("error", console.error.bind(console));
+    coordinator.on("ready", function() {
+        var result = {};
+
+
+        Object.keys(coordinator.shards_map).forEach(function(shard) {
+            result[shard] = {
+                "enabled" : !coordinator.shards_map[shard].read_only,
+                "nodes"   : {}
+            };
+
+            coordinator.shards_map[shard].nodes.forEach(function(node) {
+                result[shard].nodes[node] = coordinator.servers_map[node];
+            });
+        });
+
+        console.log(JSON.stringify(result, null, 4));
+
+        coordinator.close();
+    });
+})();
