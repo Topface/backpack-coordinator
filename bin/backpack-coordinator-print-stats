@@ -26,7 +26,7 @@
                     capacity = coordinator.sizes[id].capacity,
                     percent  = Math.round(current / capacity * 100);
 
-                console.log(id + ":", bytes(current), "/", bytes(capacity), "(" + percent + "%)");
+                console.log(id + ' [' + coordinator.getShard(id).nodes.join(", ") + ']' + ":", bytes(current), "/", bytes(capacity), "(" + percent + "%)");
             });
 
             used    = bytes(stats.used_size);
