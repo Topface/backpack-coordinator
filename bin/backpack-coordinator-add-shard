@@ -6,7 +6,7 @@
         coordinator;
 
     if (args.length < 5) {
-        console.error("Usage: backpack-coordinator-add <zk_servers> </zk/root> <id> <node1,node2,node3,..> <size (ex: 100gb)>");
+        console.error("Usage: backpack-coordinator-add-shard <zk_servers> </zk/root> <id> <node1,node2,node3,..> <size (ex: 100gb)>");
         process.exit(1);
     }
 

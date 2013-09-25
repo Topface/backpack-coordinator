@@ -6,7 +6,7 @@
         coordinator, server;
 
     if (args.length < 4) {
-        console.error("Usage: backpack-coordinator-add <zk_servers> </zk/root> <id> <url>");
+        console.error("Usage: backpack-coordinator-add-server <zk_servers> </zk/root> <id> <url>");
         process.exit(1);
     }
 
