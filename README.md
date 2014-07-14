@@ -6,7 +6,7 @@ Coordination service for backpack cluster.
 ### Installation
 
 ```
-npm install backpack-cluster
+npm install backpack-coordinator
 ```
 
 ### Usage
