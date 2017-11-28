@@ -24,10 +24,10 @@
             Object.keys(coordinator.sizes).forEach(function(id) {
                 var current  = coordinator.sizes[id].current,
                     capacity = coordinator.sizes[id].capacity,
-                    percent  = Math.round(current / capacity * 100);
+                    percent  = Math.round(current / capacity * 100),
                     status = coordinator.isShardWritable(id) ? "rw" : "r";
 
-                console.log(id + ' [' + coordinator.getShard(id).nodes.join(", ") + ']' + ":", bytes(current), "/", bytes(capacity), "(" + percent + "%)", "/", status );
+                console.log(id + ' [' + coordinator.getShard(id).nodes.join(", ") + ']' + ":", bytes(current), "/", bytes(capacity), "(" + percent + "%)", status );
             });
 
             used    = bytes(stats.used_size);
