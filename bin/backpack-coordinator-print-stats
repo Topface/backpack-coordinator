@@ -26,7 +26,13 @@
                     capacity = coordinator.sizes[id].capacity,
                     percent  = Math.round(current / capacity * 100);
 
-                console.log(id + ' [' + coordinator.getShard(id).nodes.join(", ") + ']' + ":", bytes(current), "/", bytes(capacity), "(" + percent + "%)");
+                if ( coordinator.isShardWritable(id) ){
+                    var status = "/ Writeable";
+                } else {
+                    var status = "";
+                };
+
+                console.log(id + ' [' + coordinator.getShard(id).nodes.join(", ") + ']' + ":", bytes(current), "/", bytes(capacity), "(" + percent + "%)", status );
             });
 
             used    = bytes(stats.used_size);
