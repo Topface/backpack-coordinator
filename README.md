@@ -195,6 +195,37 @@ With this config you'll be able to downloaded uploaded file by url:
 [http://one/1:hi.txt](http://one/1:hi.txt). Start nginx on more than
 one physical server to eliminate single point of failure.
 
+### Stats
+
+Coordinator could write metrics to statsd.
+
+Gauges by cluster:
+
+ * `total_size` - total cluster size
+ * `used_size` - current cluster size
+ * `queue_length` - length of a replication queue
+ * `total_shards` - total shards number
+ * `available_space` - available space in rw shards
+ 
+ 
+Gauges per shard
+
+ * `current_size` - current shard size
+ * `capacity` - shard capacity
+ * `available_size` - available data size
+              
+Increments:
+
+ * `add_photo.<ok|error>` - number of added photos
+
+Run with a stats writer:
+
+```
+/opt/backpack-coordinator/bin/backpack-coordinator one.local:2181 /backpack one 12001 statsd.example.com:8125
+```
+
+![Statistics](statistics.png)
+
 ### Todo
 
 * [docs] Make docs better.
